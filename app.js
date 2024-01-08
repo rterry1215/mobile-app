@@ -13,6 +13,6 @@ app.use(userRouter);
 //   res.json({ success: true, message: 'Welcome to backend zone!' });
 // });
 
-app.listen(8000,'192.168.148.82', () => {
+app.listen(8000,'0.0.0.0', () => {
   console.log('port is listening');
 });

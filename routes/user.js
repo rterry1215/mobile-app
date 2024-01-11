@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   createUser,
   userSignIn,
-  uploadProfile,
+  // uploadProfile,
   signOut,
   updateUserProfile, // New function for updating user profile
 } = require('../controllers/user');

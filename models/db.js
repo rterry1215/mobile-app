@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/mobile', {
+  .connect('mongodb://https://relieved-crab-snaps.cyclic.app:27017/mobile', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,

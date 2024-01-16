@@ -2,55 +2,81 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 exports.createUser = async (req, res) => {
-  const { firstname, lastname, email, password } = req.body;
-  const isNewUser = await User.isThisEmailInUse(email);
-  if (!isNewUser)
-    return res.json({
-      success: false,
-      message: "This email is already in use, try sign-in",
-    });
-  else {
-    const user = await User({
-      firstname,
-      lastname,
-      email,
-      password,
-    });
-    await user.save();
-    res.json({ success: true, user });
+  try {
+    const { firstname, lastname, email, password } = req.body;
+    const isNewUser = await User.isThisEmailInUse(email);
+    if (!isNewUser)
+      return res.json({
+        success: false,
+        message: "This email is already in use, try sign-in",
+      });
+    else {
+      const user = await User({
+        firstname,
+        lastname,
+        email,
+        password,
+      });
+      await user.save();
+      res.json({ success: true, user });
+    }
+
+    // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    //   expiresIn: "1d",
+    // });
+
+    // // Save the token to the user's tokens array
+    // await User.findByIdAndUpdate(user._id, {
+    //   $push: { tokens: { token, signedAt: Date.now().toString() } },
+    // });
+
+    // res.json({ success: true, user, token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error.message);
   }
-
-  // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-  //   expiresIn: "1d",
-  // });
-
-  // // Save the token to the user's tokens array
-  // await User.findByIdAndUpdate(user._id, {
-  //   $push: { tokens: { token, signedAt: Date.now().toString() } },
-  // });
-
-  // res.json({ success: true, user, token });
 };
 exports.updateUserProfile = async (req, res) => {
   try {
     const { userId } = req.params; // Assuming the user ID is available in the request object
 
     // Extract the fields to be updated from req.body
-    const { firstname, lastname, schoolname, standard, parentFirstName, parentLastName } = req.body;
-console.log(req.body);
+    const {
+      firstname,
+      lastname,
+      schoolname,
+      standard,
+      parentFirstName,
+      parentLastName,
+    } = req.body;
+    console.log(req.body);
     // Construct the update object with the specified fields
-    const updateFields = { firstname, lastname, schoolname, standard, parentFirstName, parentLastName };
+    const updateFields = {
+      firstname,
+      lastname,
+      schoolname,
+      standard,
+      parentFirstName,
+      parentLastName,
+    };
 
     // Example: Update the user profile in the database
-    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true });
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+      runValidators: true,
+    });
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     res.json({ success: true, user: updatedUser });
   } catch (error) {
     console.error("Error updating user profile:", error);
-    res.status(500).json({ success: false, message: "Error updating user profile" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error updating user profile" });
   }
 };
 

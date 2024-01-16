@@ -1,18 +1,18 @@
-const express = require('express');
-require('dotenv').config();
-require('./models/db');
-const userRouter = require('./routes/user');
-
-const User = require('./models/user');
+const express = require("express");
+require("dotenv").config();
+require("./config/db");
+const userRouter = require("./routes/user");
+const morgan = require('morgan');
 
 const app = express();
+app.use(morgan('combined'));
 app.use(express.json());
 app.use(userRouter);
-// testing 
+// testing
 // app.get('/', (req, res) => {
 //   res.json({ success: true, message: 'Welcome to backend zone!' });
 // });
-
-app.listen(8000, () => {
-  console.log('port is listening');
+const PORT = 8000;
+app.listen(PORT, () => {
+  console.log(PORT + "port is listening");
 });
